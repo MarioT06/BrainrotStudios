@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Brainrot Studios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #c9c4c0;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: #8B1E3F;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 15px;
+            margin: 0 auto;
+            max-width: 1400px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: none;
+            background-color: #4a4a4a;
+            color: white;
+        }
+
+        .go-button {
+            padding: 0.5rem 1rem;
+            background-color: #4a4a4a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .main-content {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: white;
+        }
+
+        .main-content h1 {
+            color: #8B1E3F;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .main-content p {
+            color: #cc3366;
+            font-size: 1.2rem;
+        }
+
+        .login-btn, .patreon-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .login-btn {
+            background-color: transparent;
+        }
+
+        .patreon-btn {
+            background-color: #cc3366;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="logo.png" alt="Logo" class="logo">
+        
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">News</a>
+            <a href="#">Calendar</a>
+            <a href="#">Comparison</a>
+            <a href="#">Tech Tree</a>
+            <a href="#">Vehicle Stats</a>
+        </div>
+
+        <div class="right-section">
+            <button class="login-btn">Login</button>
+            <button class="patreon-btn">PATREON</button>
+            <input type="text" placeholder="Search for a vehicle" class="search-box">
+            <button class="go-button">GO</button>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1>Welcome to Brainrot Studios</h1>
+        <p>Your ultimate resource for vehicle stats, comparisons, and more.</p>
+    </div>
+</body>
+</html>
