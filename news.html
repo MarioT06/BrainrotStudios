@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News - Brainrot Studios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #c9c4c0;
+        }
+
+        .navbar {
+            background-color: #8B1E3F;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 1400px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: none;
+            background-color: #4a4a4a;
+            color: white;
+        }
+
+        .go-button {
+            padding: 0.5rem 1rem;
+            background-color: #4a4a4a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .news-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .news-item {
+            background: white;
+            margin: 1rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .news-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .news-image {
+            width: 300px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .news-content {
+            flex: 1;
+        }
+
+        .news-item h3 {
+            color: #8B1E3F;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .news-category {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background: #8B1E3F;
+            color: white;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+        }
+
+        .news-date {
+            color: #666;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .error {
+            color: #8B1E3F;
+        }
+
+        .login-btn, .patreon-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .login-btn {
+            background-color: transparent;
+        }
+
+        .patreon-btn {
+            background-color: #cc3366;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="logo.jpg" alt="Brainrot Studios Logo" class="logo">
+        
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="news.html">News</a>
+            <a href="#">Calendar</a>
+            <a href="#">Comparison</a>
+            <a href="#">Tech Tree</a>
+            <a href="#">Vehicle Stats</a>
+        </div>
+
+        <div class="right-section">
+            <button class="login-btn">Login</button>
+            <button class="patreon-btn">PATREON</button>
+            <input type="text" placeholder="Search for a vehicle" class="search-box">
+            <button class="go-button">GO</button>
+        </div>
+    </nav>
+
+    <div class="news-container">
+        <h2>Latest World of Tanks News</h2>
+        <div id="news-content">
+            <div class="loading">Loading latest news...</div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchNews() {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://worldoftanks.eu/en/news/');
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+                
+                const newsContainer = document.getElementById('news-content');
+                const newsItems = doc.querySelectorAll('.preview_item');
+                
+                newsContainer.innerHTML = '';
+                
+                newsItems.forEach(item => {
+                    const link = item.querySelector('.preview_link').href;
+                    const title = item.querySelector('.preview_title').textContent;
+                    const category = item.querySelector('.preview_category').textContent;
+                    const time = item.querySelector('.preview_time').textContent;
+                    const imageStyle = item.querySelector('.preview_image-holder').style.backgroundImage;
+                    const imageUrl = imageStyle.replace('url("', '').replace('")', '');
+                    
+                    const newsElement = document.createElement('div');
+                    newsElement.className = 'news-item';
+                    newsElement.innerHTML = `
+                        <img src="${imageUrl}" alt="${title}" class="news-image">
+                        <div class="news-content">
+                            <h3><a href="https://worldoftanks.eu${link}" target="_blank">${title}</a></h3>
+                            <div class="news-meta">
+                                <span class="news-category">${category}</span>
+                                <span class="news-date">${time}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    newsContainer.appendChild(newsElement);
+                });
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                document.getElementById('news-content').innerHTML = 
+                    '<div class="error">Unable to load news. Please try again later. Check browser console for details.</div>';
+            }
+        }
+
+        // Fetch news immediately
+        fetchNews();
+
+        // Update news every 1 minute
+        setInterval(fetchNews, 60 * 1000);
+    </script>
+</body>
+</html> 
