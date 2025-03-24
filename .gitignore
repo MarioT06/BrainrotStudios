@@ -1,0 +1,11 @@
+# Ignore temporary files
+fixed_description.txt
+fixed_news.html
+news_fixed.html
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log 
