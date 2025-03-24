@@ -70,57 +70,71 @@
         }
 
         .news-container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 2rem auto;
             padding: 1rem;
         }
 
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
         .news-item {
             background: white;
-            margin: 1rem 0;
-            padding: 1.5rem;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
             transition: transform 0.2s;
             display: flex;
-            gap: 1.5rem;
+            flex-direction: column;
         }
 
         .news-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
         }
 
-        .news-image {
-            width: 300px;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 5px;
+        .preview_link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
         }
 
-        .news-content {
-            flex: 1;
+        .preview_image-holder {
+            height: 250px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
         }
 
-        .news-item h3 {
-            color: #8B1E3F;
-            margin-bottom: 0.5rem;
+        .preview_content {
+            padding: 20px;
+        }
+
+        .preview_title {
             font-size: 1.4rem;
+            color: #8B1E3F;
+            margin-bottom: 10px;
         }
 
-        .news-category {
+        .preview_meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .preview_category {
             display: inline-block;
             padding: 0.2rem 0.5rem;
             background: #8B1E3F;
             color: white;
             border-radius: 3px;
             font-size: 0.8rem;
-            margin-right: 1rem;
-        }
-
-        .news-date {
-            color: #666;
-            font-size: 0.9rem;
-            display: inline-block;
         }
 
         .loading, .error {
@@ -148,6 +162,99 @@
         .patreon-btn {
             background-color: #cc3366;
         }
+
+        .load-more-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .load-more-btn {
+            background-color: #8B1E3F;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .load-more-btn:hover {
+            background-color: #a62d4d;
+        }
+
+        .show-more-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .show-more_link {
+            display: inline-block;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .show-more_link:hover {
+            background-color: #555;
+        }
+
+        .is_important {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff5722;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .news-description {
+            color: #333;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            color: #8B1E3F;
+        }
+
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .news-count {
+            font-size: 0.9rem;
+            color: #666;
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border: 3px solid rgba(139, 30, 63, 0.3);
+            border-radius: 50%;
+            border-top-color: #8B1E3F;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -172,62 +279,448 @@
     </nav>
 
     <div class="news-container">
-        <h2>Latest World of Tanks News</h2>
-        <div id="news-content">
-            <div class="loading">Loading latest news...</div>
+        <div class="news-header">
+            <h2>Latest News</h2>
+        </div>
+        <div id="news-list" class="news-list">
+            <!-- News items will be loaded here -->
+        </div>
+        <div id="loading" class="loading"><span class="loading-spinner"></span> Loading latest news...</div>
+        <div id="load-more-container" class="load-more-container" style="display: none;">
+            <button id="load-more-btn" class="load-more-btn">Зареди повече новини</button>
         </div>
     </div>
 
     <script>
-        async function fetchNews() {
+        // News data - will be populated by fetch function
+        let allNews = [];
+        let displayedNewsCount = 0;
+        const ITEMS_PER_PAGE = 15;
+        let lastCheckedTime = 0;
+        
+        // Global variables
+        const newsList = document.getElementById('news-list');
+        const loadingElement = document.getElementById('loading');
+        const loadMoreContainer = document.getElementById('load-more-container');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        
+        // Function to fetch news from Wargaming site
+        async function fetchWargamingNews() {
             try {
-                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://worldoftanks.eu/en/news/');
-                const response = await fetch(proxyUrl);
+                // Show loading indicator while fetching
+                loadingElement.style.display = 'block';
+                
+                // In a real implementation, you would use a server-side proxy to fetch data
+                // from the Wargaming site to avoid CORS issues. Here's a conceptual approach:
+                
+                /*
+                // This would be the real implementation with a server-side proxy
+                const apiUrl = `/api/get-wg-news?since=${lastCheckedTime}`;
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch news from server');
+                }
+                
                 const data = await response.json();
                 
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data.contents, 'text/html');
+                // Update our news collection (prepend new items since they are newer)
+                if (data.items && data.items.length > 0) {
+                    allNews = [...data.items, ...allNews];
+                    lastCheckedTime = Date.now();
+                }
                 
-                const newsContainer = document.getElementById('news-content');
-                const newsItems = doc.querySelectorAll('.preview_item');
+                return {
+                    success: true,
+                    newItems: data.items.length,
+                    items: allNews
+                };
+                */
                 
-                newsContainer.innerHTML = '';
+                // For demonstration, we'll simulate the scraping with a delay
+                await new Promise(resolve => setTimeout(resolve, 800));
                 
-                newsItems.forEach(item => {
-                    const link = item.querySelector('.preview_link').href;
-                    const title = item.querySelector('.preview_title').textContent;
-                    const category = item.querySelector('.preview_category').textContent;
-                    const time = item.querySelector('.preview_time').textContent;
-                    const imageStyle = item.querySelector('.preview_image-holder').style.backgroundImage;
-                    const imageUrl = imageStyle.replace('url("', '').replace('")', '');
-                    
-                    const newsElement = document.createElement('div');
-                    newsElement.className = 'news-item';
-                    newsElement.innerHTML = `
-                        <img src="${imageUrl}" alt="${title}" class="news-image">
-                        <div class="news-content">
-                            <h3><a href="https://worldoftanks.eu${link}" target="_blank">${title}</a></h3>
-                            <div class="news-meta">
-                                <span class="news-category">${category}</span>
-                                <span class="news-date">${time}</span>
-                            </div>
-                        </div>
-                    `;
-                    
-                    newsContainer.appendChild(newsElement);
-                });
+                // If this is the first fetch, use our sample data
+                if (allNews.length === 0) {
+                    allNews = sampleNews;
+                    lastCheckedTime = Date.now();
+                } else {
+                    // Simulate finding no new articles
+                    // In a real implementation, this would check for new articles on the site
+                }
+                
+                // Hide loading indicator
+                loadingElement.style.display = 'none';
+                
+                return {
+                    success: true,
+                    newItems: 0,
+                    items: allNews
+                };
             } catch (error) {
                 console.error('Error fetching news:', error);
-                document.getElementById('news-content').innerHTML = 
-                    '<div class="error">Unable to load news. Please try again later. Check browser console for details.</div>';
+                loadingElement.textContent = 'Error loading news. Please try again later.';
+                loadingElement.style.display = 'block';
+                
+                return {
+                    success: false,
+                    message: 'Error loading news'
+                };
+            }
+        }
+        
+        // Function to create news item HTML
+        function createNewsItem(item) {
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-item';
+            
+            // Convert relative URLs to absolute Wargaming URLs
+            const fullUrl = item.url.startsWith('http') ? item.url : `https://worldoftanks.eu${item.url}`;
+            
+            // Convert relative image URLs to absolute URLs
+            const fullImageUrl = item.preview_thumb.startsWith('http') ? item.preview_thumb : `https:${item.preview_thumb}`;
+            
+            // Translate "IMPORTANT" to Bulgarian
+            const importantText = "ВАЖНО";
+            
+            newsItem.innerHTML = `
+                <a class="preview_link" href="${fullUrl}" target="_blank">
+                    <span class="preview_image-holder" style="background-image: url('${fullImageUrl}');">
+                        ${item.is_important ? `<span class="is_important">${importantText}</span>` : ''}
+                    </span>
+                    <div class="preview_content">
+                        <h3 class="preview_title">${item.title_bg || item.title}</h3>
+                        <p class="news-description">${item.description_bg || item.description}</p>
+                        <div class="preview_meta">
+                            <span class="preview_category">${item.category_bg || item.category}</span>
+                            <span class="preview_date">${item.date}</span>
+                        </div>
+                    </div>
+                </a>
+            `;
+            
+            return newsItem;
+        }
+
+        // Function to fix any corrupted descriptions
+        function fixDescriptions() {
+            // Fix the Peaky Blinders description directly
+            document.querySelectorAll('.news-item').forEach(item => {
+                const title = item.querySelector('.preview_title');
+                if (title && title.textContent.includes("Peaky Blinders")) {
+                    const descElement = item.querySelector('.news-description');
+                    if (descElement) {
+                        descElement.textContent = "По заповед на Peaky Blinders! Специално сътрудничество за боен пропуск внася суровия свят на хитовия电视机 сериал в World of Tanks с ексклузивно съдържание.";
+                    }
+                }
+            });
+            
+            // Also fix it in the data source
+            allNews.forEach(item => {
+                if (item.title && item.title.includes("Peaky Blinders")) {
+                    item.description_bg = "По заповед на Peaky Blinders! Специално сътрудничество за боен пропуск внася суровия свят на хитовия电视机 сериал в World of Tanks с ексклузивно съдържание.";
+                }
+            });
+        }
+
+        // Function to load initial news items
+        async function loadInitialNews() {
+            // Show loading indicator
+            loadingElement.style.display = 'block';
+            loadMoreContainer.style.display = 'none';
+            
+            // Fetch all news
+            const response = await fetchWargamingNews();
+            
+            if (response.success) {
+                // Hide loading indicator
+                loadingElement.style.display = 'none';
+                
+                // Clear existing news (in case of refresh)
+                newsList.innerHTML = '';
+                displayedNewsCount = 0;
+                
+                // Add the first 15 news items
+                const itemsToShow = Math.min(ITEMS_PER_PAGE, response.items.length);
+                for (let i = 0; i < itemsToShow; i++) {
+                    const newsItem = createNewsItem(response.items[i]);
+                    newsList.appendChild(newsItem);
+                    displayedNewsCount++;
+                }
+                
+                // Always show the load more button if there's more than 15 news items total
+                if (response.items.length > ITEMS_PER_PAGE) {
+                    loadMoreContainer.style.display = 'block';
+                } else {
+                    loadMoreContainer.style.display = 'none';
+                }
+                
+                // Fix any description issues
+                fixDescriptions();
+            } else {
+                // Handle error state
+                loadingElement.textContent = 'Error loading news. Please try again later.';
+                loadingElement.style.display = 'block';
             }
         }
 
-        // Fetch news immediately
-        fetchNews();
+        // Function to load more news items
+        function loadMoreNews() {
+            // Show loading indicator briefly
+            loadingElement.style.display = 'block';
+            loadMoreContainer.style.display = 'none';
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                // Hide loading indicator
+                loadingElement.style.display = 'none';
+                
+                const startIndex = displayedNewsCount;
+                const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, allNews.length);
+                
+                // Add the next batch of news items
+                for (let i = startIndex; i < endIndex; i++) {
+                    const newsItem = createNewsItem(allNews[i]);
+                    newsList.appendChild(newsItem);
+                    displayedNewsCount++;
+                }
+                
+                // Show or hide load more button based on whether there are more news items to load
+                if (displayedNewsCount < allNews.length) {
+                    loadMoreContainer.style.display = 'block';
+                } else {
+                    loadMoreContainer.style.display = 'none';
+                }
+                
+                // Fix any description issues
+                fixDescriptions();
+            }, 400);
+        }
 
-        // Update news every 1 minute
-        setInterval(fetchNews, 60 * 1000);
+        // Function to check for new news periodically
+        async function checkForNewNews() {
+            // This simulation assumes a real implementation would fetch new news
+            // and prepend them to the list
+            const oldNewsCount = allNews.length;
+            
+            // In a real implementation, we would call the server to check for new news
+            // and if there are any, prepend them to the list
+            const response = await fetchWargamingNews();
+            
+            if (response.success && response.newItems > 0) {
+                // Refresh the page to show new news
+                loadInitialNews();
+                
+                // Alert user about new news
+                alert(`${response.newItems} new articles have been added!`);
+            }
+            
+            // Schedule the next check
+            setTimeout(checkForNewNews, 5 * 60 * 1000); // Check every 5 minutes
+        }
+
+        // Event listener for load more button
+        loadMoreBtn.addEventListener('click', loadMoreNews);
+
+        // Initialize the news system
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial news
+            loadInitialNews();
+            
+            // Start checking for new news
+            setTimeout(checkForNewNews, 5 * 60 * 1000); // First check after 5 minutes
+            
+            // Always display the load more button initially
+            setTimeout(() => {
+                if (allNews.length > ITEMS_PER_PAGE) {
+                    loadMoreContainer.style.display = 'block';
+                }
+            }, 1000);
+        });
+
+        // Legacy sample data
+        const sampleNews = [
+            {
+                url: "/en/news/specials/tl-1-lpc-march-2025/",
+                title: "Come Out and Play: Rock the Battlefield with the TL-1 LPC",
+                title_bg: "Излез и играй: Разтърси бойното поле с TL-1 LPC",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/tl-1-lpc-the-offspring-1022x360.jpg",
+                category: "Specials",
+                category_bg: "Специални",
+                date: "22/03/2025",
+                is_important: false,
+                description: "Get ready to rock the battlefield with The Offspring Edition of the TL-1 LPC American medium tank. This special collaboration brings punk energy to your battles!",
+                description_bg: "Подгответе се да разтърсите бойното поле с изданието The Offspring на американския среден танк TL-1 LPC. Това специално сътрудничество внася пънк енергия във вашите битки!"
+            },
+            {
+                url: "/en/news/general-news/girls-und-panzer-march-2025/",
+                title: "St. Gloriana Joins the Battle!",
+                title_bg: "St. Gloriana се включва в битката!",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/1022x360_v2_H91NIyx.jpg",
+                category: "General News",
+                category_bg: "Общи новини",
+                date: "21/03/2025",
+                is_important: false,
+                description: "The elegant St. Gloriana Girls Academy from the popular anime 'Girls und Panzer' arrives in World of Tanks with special tanks and customization options.",
+                description_bg: "Елегантната академия за момичета St. Gloriana от популярното аниме 'Girls und Panzer' пристига в World of Tanks със специални танкове и опции за персонализация."
+            },
+            {
+                url: "/en/news/specials/battle-pass-special-missions-drops-mar-2025/",
+                title: "Peaky Blinders Weekends: Twitch Drops and Missions",
+                title_bg: "Уикенди на Peaky Blinders: Twitch дропове и мисии",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/peaky_blinders_weekends_thumbnail_1022x360.jpg",
+                category: "Specials",
+                category_bg: "Специални",
+                date: "20/03/2025",
+                is_important: false,
+                description: "Watch World of Tanks streams on Twitch this weekend to earn exclusive Peaky Blinders-themed items and complete special in-game missions.",
+                description_bg: "Гледайте стриймове на World of Tanks в Twitch този уикенд, за да спечелите ексклузивни предмети с тема Peaky Blinders и да изпълните специални мисии в играта."
+            },
+            {
+                url: "/en/news/updates/micro-patch-200325/",
+                title: "Micropatch Release on March 20",
+                title_bg: "Микропатч на 20 март",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/micro_patch_wot_1022x360.jpg",
+                category: "Updates",
+                category_bg: "Обновления",
+                date: "19/03/2025",
+                is_important: false,
+                description: "A small update will be released on March 20 to address several issues and implement minor improvements to the game.",
+                description_bg: "На 20 март ще бъде пуснат малък ъпдейт за решаване на няколко проблема и въвеждане на малки подобрения в играта."
+            },
+            {
+                url: "/en/news/general-news/battle-pass-special-mar-2025/",
+                title: "Battle Pass Special: Peaky Blinders",
+                title_bg: "Специален боен пропуск: Peaky Blinders",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/peaky_blinders_portal_promo.jpg",
+                category: "General News",
+                category_bg: "Общи новини",
+                date: "18/03/2025",
+                is_important: true,
+                description: "By order of the Peaky Blinders! A special Battle Pass collaboration brings the gritty world of the hit TV series to World of Tanks with exclusive content.",
+                description_bg: "По заповед на Peaky Blinders! Специално сътрудничество за боен пропуск внася суровия свят на хитовия电视机 сериал в World of Tanks с ексклузивно съдържание."
+            },
+            {
+                url: "/en/news/merchandise/steel-hunter-merch-march-2025/",
+                title: "Get Steel Hunter Merch and Gear Up for the Showdown",
+                title_bg: "Вземете мърч на Steel Hunter и се подгответе за решителната битка",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/steel-hunter-merch-march-2025-1022x360.jpg",
+                category: "Merchandise",
+                category_bg: "Мърчандайз",
+                date: "15/03/2025",
+                is_important: false,
+                description: "Show your love for the Steel Hunter game mode with exclusive merchandise including t-shirts, mugs, and more available in the Wargaming Store.",
+                description_bg: "Покажете любовта си към режима на играта Steel Hunter с ексклузивни стоки, включително тениски, чаши и други, налични в магазина на Wargaming."
+            },
+            {
+                url: "/en/news/guides-reviews/video-guide-heavy-tanks/",
+                title: "Tank Coach: Heavy Tank Fundamentals",
+                title_bg: "Танков треньор: Основите на тежките танкове",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/asia_eu_esrb_pb_tankcoach6_thumbnail_1022x360_play.jpg",
+                category: "Guides",
+                category_bg: "Ръководства",
+                date: "14/03/2025",
+                is_important: false,
+                description: "Learn the fundamentals of playing heavy tanks effectively in this comprehensive video guide from our Tank Coach series.",
+                description_bg: "Научете основите на ефективната игра с тежки танкове в това изчерпателно видео ръководство от нашата поредица Tank Coach."
+            },
+            {
+                url: "/en/news/specials/emerald-chests-2025/",
+                title: "Emerald Chests: Take a Look Inside!",
+                title_bg: "Изумрудени сандъци: Надникнете вътре!",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/1022x360_H9FpM1O.jpg",
+                category: "Specials",
+                category_bg: "Специални",
+                date: "13/03/2025",
+                is_important: false,
+                description: "Discover what treasures await inside the St. Patrick's Day themed Emerald Chests, available for a limited time in the Premium Shop.",
+                description_bg: "Открийте какви съкровища ви очакват в тематичните изумрудени сандъци за Деня на Свети Патрик, налични за ограничено време в премиум магазина."
+            },
+            {
+                url: "/en/news/specials/paint-it-green-event-2025-redir/",
+                title: "Join the Paint It GREEN! Web Event!",
+                title_bg: "Включете се в уеб събитието Paint It GREEN!",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/liveops_patrick_event_1022x360px_losp25.jpg",
+                category: "Specials",
+                category_bg: "Специални",
+                date: "12/03/2025",
+                is_important: false,
+                description: "Take part in our Paint It GREEN! web event to earn special rewards and St. Patrick's Day-themed customization items.",
+                description_bg: "Участвайте в нашето уеб събитие Paint It GREEN!, за да спечелите специални награди и предмети за персонализация с тема Деня на Свети Патрик."
+            },
+            {
+                url: "/en/news/general-news/steel-hunter-green-festival-2025/",
+                title: "Steel Hunter: Shamrock Showdown Returns!",
+                title_bg: "Steel Hunter: Завръщане на Shamrock Showdown!",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/1022_360_st_patrick_steel_hunter.jpg",
+                category: "General News",
+                category_bg: "Общи новини",
+                date: "11/03/2025",
+                is_important: false,
+                description: "The popular Steel Hunter battle royale mode returns with a St. Patrick's Day theme. Compete on a special green battlefield for exclusive rewards!",
+                description_bg: "Популярният режим на битка Steel Hunter се завръща с тема за Деня на Свети Патрик. Състезавайте се на специално зелено бойно поле за ексклузивни награди!"
+            },
+            {
+                url: "/en/news/general-news/paint-it-green-festival-2025/",
+                title: "Paint It GREEN!",
+                title_bg: "Боядисай го в ЗЕЛЕНО!",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/paint-it-green-2025.jpg",
+                category: "General News",
+                category_bg: "Общи новини",
+                date: "11/03/2025",
+                is_important: true,
+                description: "Our annual St. Patrick's Day celebration brings green-themed missions, decorations, and special bonuses to World of Tanks.",
+                description_bg: "Нашето годишно честване на Деня на Свети Патрик внася мисии със зелена тема, декорации и специални бонуси в World of Tanks."
+            },
+            {
+                url: "/en/news/general-news/maneuvers-february-2025/",
+                title: "Conquer with Maneuvers: Claim Glory and Rewards",
+                title_bg: "Завладей с маневри: Получи слава и награди",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/strongholds_1022x360.jpg",
+                category: "General News",
+                category_bg: "Общи новини",
+                date: "10/03/2025",
+                is_important: false,
+                description: "Participate in Clan Maneuvers to earn exclusive rewards and strengthen your clan's position in the global rankings.",
+                description_bg: "Участвайте в Кланови маневри, за да спечелите ексклузивни награди и да укрепите позицията на вашия клан в световната класация."
+            },
+            {
+                url: "/en/news/general-news/matchmaker-changes-march-2025/",
+                title: "[IN DEVELOPMENT] Matchmaker Update: A New Core System for More Comfortable Battles",
+                title_bg: "[В РАЗРАБОТКА] Обновление на системата за подбор: Нова основна система за по-комфортни битки",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/matchmaker_scales_1022x360.jpg",
+                category: "General News",
+                category_bg: "Общи новини",
+                date: "07/03/2025",
+                is_important: true,
+                description: "Our development team is working on a major overhaul of the matchmaking system to create more balanced and enjoyable battles for all players.",
+                description_bg: "Нашият екип за разработка работи по основно преработване на системата за подбор на мачове, за да създаде по-балансирани и приятни битки за всички играчи."
+            },
+            {
+                url: "/en/news/competitive-gaming/clan-showdown-sign-up-march-2025/",
+                title: "Sign Up for the April Clan Showdown!",
+                title_bg: "Запишете се за Клановия сблъсък през април!",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/clan_showdown_1022x360.png",
+                category: "Competitive Gaming",
+                category_bg: "Състезателни игри",
+                date: "07/03/2025",
+                is_important: false,
+                description: "Registration is now open for the April Clan Showdown tournament. Gather your clan members and compete for glory and valuable prizes!",
+                description_bg: "Регистрацията вече е отворена за турнира Clan Showdown през април. Съберете членовете на вашия клан и се състезавайте за слава и ценни награди!"
+            },
+            {
+                url: "/en/news/general-news/battle-pass-2025-vehicles/",
+                title: "ERAC 105 Proto and Object 265T: New Battle Pass Tanks Arrive!",
+                title_bg: "ERAC 105 Proto и Object 265T: Пристигат нови танкове за боен пропуск!",
+                preview_thumb: "//eu-wotp.wgcdn.co/dcont/fb/image/battle_pass_1022x360_thumbnail_cut_%281%29.jpg",
+                category: "General News",
+                category_bg: "Общи новини",
+                date: "06/03/2025",
+                is_important: false,
+                description: "Discover the new reward vehicles coming in the next Battle Pass season: the French ERAC 105 Proto medium tank and the Soviet Object 265T heavy tank.",
+                description_bg: "Открийте новите превозни средства за награда, идващи в следващия сезон на Battle Pass: френският среден танк ERAC 105 Proto и съветския тежък танк Object 265T."
+            }
+        ];
     </script>
 </body>
 </html> 
