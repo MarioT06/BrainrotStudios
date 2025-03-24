@@ -5,6 +5,8 @@ A gaming website focused on World of Tanks stats, news, and community resources.
 ## Features
 
 - **Latest News**: Automatically fetches and displays World of Tanks news
+  - Auto-updates every 5 minutes to check for new content
+  - Loads 15 news items at a time with "Load More" functionality
 - **Responsive Design**: Works on desktop and mobile devices
 - **Bulgarian Language Support**: Fully translated interface and content
 
