@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gun Marks - Brainrot Studios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #c9c4c0;
+        }
+
+        .navbar {
+            background-color: #8B1E3F;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 1400px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: none;
+            background-color: #4a4a4a;
+            color: white;
+        }
+
+        .go-button {
+            padding: 0.5rem 1rem;
+            background-color: #4a4a4a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-btn, .patreon-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .login-btn {
+            background-color: transparent;
+        }
+
+        .patreon-btn {
+            background-color: #cc3366;
+        }
+
+        .gunmarks-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            color: #f0f0f0;
+        }
+
+        .gunmarks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .gunmarks-header h2 {
+            color: #f0f0f0;
+        }
+
+        .last-updated {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        select, input {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: #f0f0f0;
+        }
+
+        .gunmarks-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .gunmarks-table th, .gunmarks-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .gunmarks-table th {
+            background-color: #2a2a2a;
+            position: sticky;
+            top: 0;
+            cursor: pointer;
+        }
+
+        .gunmarks-table th:hover {
+            background-color: #3a3a3a;
+        }
+
+        .gunmarks-table tbody tr:hover {
+            background-color: #2a2a2a;
+        }
+
+        .nation-flag, .tank-type {
+            width: 30px;
+            height: 20px;
+            display: inline-block;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            vertical-align: middle;
+        }
+
+        .tank-name {
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .mark-value {
+            font-weight: bold;
+        }
+
+        /* Nation flags */
+        .nation-ussr {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/ussr.svg');
+        }
+        
+        .nation-germany {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/germany.svg');
+        }
+        
+        .nation-usa {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/usa.svg');
+        }
+        
+        .nation-china {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/china.svg');
+        }
+        
+        .nation-france {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/france.svg');
+        }
+        
+        .nation-uk {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/uk.svg');
+        }
+        
+        .nation-japan {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/japan.svg');
+        }
+        
+        .nation-czech {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/czech.svg');
+        }
+        
+        .nation-sweden {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/sweden.svg');
+        }
+        
+        .nation-poland {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/poland.svg');
+        }
+        
+        .nation-italy {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/italy.svg');
+        }
+
+        /* Tank types */
+        .type-lt {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/lightTank.svg');
+        }
+        
+        .type-mt {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/mediumTank.svg');
+        }
+        
+        .type-ht {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/heavyTank.svg');
+        }
+        
+        .type-td {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/AT-SPG.svg');
+        }
+        
+        .type-spg {
+            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/SPG.svg');
+        }
+
+        /* Loader */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+        }
+
+        .loader {
+            border: 5px solid #333;
+            border-top: 5px solid #8B1E3F;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="logo.jpg" alt="Brainrot Studios Logo" class="logo">
+        
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="news.html">News</a>
+            <a href="gunmarks.html">Gun Marks</a>
+            <a href="#">Calendar</a>
+            <a href="#">Comparison</a>
+            <a href="#">Tech Tree</a>
+            <a href="#">Vehicle Stats</a>
+        </div>
+
+        <div class="right-section">
+            <button class="login-btn">Login</button>
+            <button class="patreon-btn">PATREON</button>
+            <input type="text" placeholder="Search for a vehicle" class="search-box">
+            <button class="go-button">GO</button>
+        </div>
+    </nav>
+
+    <div class="gunmarks-container">
+        <div class="gunmarks-header">
+            <h2>World of Tanks Gun Marks Requirements</h2>
+            <span class="last-updated" id="last-updated">Last updated: Loading...</span>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="nation-filter">Nation</label>
+                <select id="nation-filter">
+                    <option value="all">All Nations</option>
+                    <option value="ussr">U.S.S.R.</option>
+                    <option value="germany">Germany</option>
+                    <option value="usa">U.S.A.</option>
+                    <option value="china">China</option>
+                    <option value="france">France</option>
+                    <option value="uk">U.K.</option>
+                    <option value="japan">Japan</option>
+                    <option value="czech">Czechoslovakia</option>
+                    <option value="sweden">Sweden</option>
+                    <option value="poland">Poland</option>
+                    <option value="italy">Italy</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="type-filter">Vehicle Type</label>
+                <select id="type-filter">
+                    <option value="all">All Types</option>
+                    <option value="lt">Light Tanks</option>
+                    <option value="mt">Medium Tanks</option>
+                    <option value="ht">Heavy Tanks</option>
+                    <option value="td">Tank Destroyers</option>
+                    <option value="spg">SPGs</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="tier-filter">Tier</label>
+                <select id="tier-filter">
+                    <option value="all">All Tiers</option>
+                    <option value="8">VIII</option>
+                    <option value="9">IX</option>
+                    <option value="10">X</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="search-filter">Search</label>
+                <input type="text" id="search-filter" placeholder="Search for vehicle">
+            </div>
+        </div>
+
+        <div id="gunmarks-data">
+            <div class="loading-container">
+                <div class="loader"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tank data with gun mark requirements
+        let tanksData = [];
+        let filteredData = [];
+        let sortField = '95';
+        let sortDirection = 'ascending';
+        
+        // Fetch data on load
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchGunMarksData();
+            
+            // Set up the filters
+            document.getElementById('nation-filter').addEventListener('change', applyFilters);
+            document.getElementById('type-filter').addEventListener('change', applyFilters);
+            document.getElementById('tier-filter').addEventListener('change', applyFilters);
+            document.getElementById('search-filter').addEventListener('input', applyFilters);
+            
+            // Schedule daily update
+            setupDailyUpdate();
+        });
+        
+        // Function to fetch gun marks data
+        async function fetchGunMarksData() {
+            try {
+                const dataContainer = document.getElementById('gunmarks-data');
+                dataContainer.innerHTML = `
+                    <div class="loading-container">
+                        <div class="loader"></div>
+                    </div>
+                `;
+                
+                // Since we don't have PHP on the server, we'll use a CORS proxy to fetch data directly
+                // from poliroid.me
+                const apiUrl = 'https://poliroid.me/api/wot/gunmarks';
+                const corsProxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(apiUrl);
+                
+                const response = await fetch(corsProxyUrl);
+                const data = await response.json();
+                
+                if (!data || !data.contents) {
+                    throw new Error('Failed to load data from API');
+                }
+                
+                // Parse the JSON content from the proxy response
+                const gunMarksData = JSON.parse(data.contents);
+                
+                if (!gunMarksData || !gunMarksData.data) {
+                    throw new Error('Invalid data format received from API');
+                }
+                
+                // Process the tank data
+                tanksData = gunMarksData.data
+                    .filter(tank => tank.marks && [8, 9, 10].includes(tank.tier)) // Only include tiers 8, 9, 10
+                    .map(tank => {
+                        return {
+                            id: tank.id || '',
+                            nation: tank.nation || '',
+                            type: tank.type || '',
+                            tier: tank.tier || 0,
+                            name: tank.name || '',
+                            short_name: tank.short_name || '',
+                            is_premium: tank.is_premium || false,
+                            values: {
+                                '65': tank.marks['65'] || 0,
+                                '85': tank.marks['85'] || 0,
+                                '95': tank.marks['95'] || 0
+                            }
+                        };
+                    });
+                
+                // Initialize filtered data
+                filteredData = [...tanksData];
+                
+                // Sort data
+                sortData();
+                
+                // Update last updated time
+                const now = new Date();
+                document.getElementById('last-updated').textContent = `Last updated: ${now.toLocaleString()}`;
+                
+                // Render data
+                renderTable();
+                
+                // Store in local storage for caching
+                localStorage.setItem('gunMarksData', JSON.stringify({
+                    timestamp: Date.now(),
+                    data: tanksData
+                }));
+                
+            } catch (error) {
+                console.error('Error fetching gun marks data:', error);
+                
+                // Try to use cached data from localStorage
+                try {
+                    const cachedData = localStorage.getItem('gunMarksData');
+                    if (cachedData) {
+                        const parsedCache = JSON.parse(cachedData);
+                        const cacheTime = new Date(parsedCache.timestamp);
+                        
+                        // Use cached data
+                        tanksData = parsedCache.data;
+                        filteredData = [...tanksData];
+                        sortData();
+                        renderTable();
+                        
+                        document.getElementById('last-updated').textContent = 
+                            `Last updated: ${cacheTime.toLocaleString()} (cached)`;
+                        
+                        // Show warning about using cached data
+                        const dataContainer = document.getElementById('gunmarks-data');
+                        const tableElement = dataContainer.querySelector('.gunmarks-table');
+                        
+                        if (tableElement) {
+                            const warningDiv = document.createElement('div');
+                            warningDiv.style.backgroundColor = '#8B1E3F';
+                            warningDiv.style.color = 'white';
+                            warningDiv.style.padding = '10px';
+                            warningDiv.style.marginBottom = '15px';
+                            warningDiv.style.borderRadius = '5px';
+                            warningDiv.textContent = 'Using cached data. Could not connect to server for fresh data.';
+                            
+                            dataContainer.insertBefore(warningDiv, tableElement);
+                        }
+                        
+                        return; // Exit function since we successfully used cached data
+                    }
+                } catch (cacheError) {
+                    console.error('Error using cached data:', cacheError);
+                }
+                
+                // If we got here, we couldn't use cached data either
+                document.getElementById('gunmarks-data').innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <p>Error loading gun marks data. Please try again later.</p>
+                        <p>Details: ${error.message}</p>
+                        <button id="retry-button" style="margin-top: 20px; padding: 10px 20px; background-color: #8B1E3F; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            Retry
+                        </button>
+                    </div>
+                `;
+                
+                // Add event listener for retry button
+                document.getElementById('retry-button').addEventListener('click', fetchGunMarksData);
+            }
+        }
+        
+        // Function to render the table with current data
+        function renderTable() {
+            const dataContainer = document.getElementById('gunmarks-data');
+            
+            // If no data, show message
+            if (filteredData.length === 0) {
+                dataContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <p>No vehicles match your filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create table
+            let tableHTML = `
+                <table class="gunmarks-table">
+                    <thead>
+                        <tr>
+                            <th onclick="changeSortOrder('nation')">
+                                <span class="table-header">Nation</span>
+                            </th>
+                            <th onclick="changeSortOrder('type')">
+                                <span class="table-header">Type</span>
+                            </th>
+                            <th onclick="changeSortOrder('tier')">
+                                <span class="table-header">Tier</span>
+                            </th>
+                            <th onclick="changeSortOrder('name')">
+                                <span class="table-header">Vehicle Name</span>
+                            </th>
+                            <th onclick="changeSortOrder('65')">
+                                <span class="table-header">65%</span>
+                            </th>
+                            <th onclick="changeSortOrder('85')">
+                                <span class="table-header">85%</span>
+                            </th>
+                            <th onclick="changeSortOrder('95')" class="sorted ${sortDirection}">
+                                <span class="table-header">95%</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Add each tank row
+            filteredData.forEach(tank => {
+                const nationClass = `nation-${tank.nation}`;
+                const typeClass = `type-${tank.type}`;
+                
+                tableHTML += `
+                    <tr>
+                        <td><span class="nation-flag ${nationClass}"></span></td>
+                        <td><span class="tank-type ${typeClass}"></span></td>
+                        <td>${getRomanNumeral(tank.tier)}</td>
+                        <td class="tank-name">${tank.name}</td>
+                        <td class="mark-value">${tank.values['65'].toLocaleString()}</td>
+                        <td class="mark-value">${tank.values['85'].toLocaleString()}</td>
+                        <td class="mark-value">${tank.values['95'].toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            dataContainer.innerHTML = tableHTML;
+        }
+        
+        // Function to filter data based on user selections
+        function applyFilters() {
+            const nationFilter = document.getElementById('nation-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            const tierFilter = document.getElementById('tier-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+            
+            filteredData = tanksData.filter(tank => {
+                // Apply nation filter
+                if (nationFilter !== 'all' && tank.nation !== nationFilter) return false;
+                
+                // Apply type filter
+                if (typeFilter !== 'all' && tank.type !== typeFilter) return false;
+                
+                // Apply tier filter
+                if (tierFilter !== 'all' && tank.tier !== parseInt(tierFilter)) return false;
+                
+                // Apply search filter
+                if (searchFilter && !tank.name.toLowerCase().includes(searchFilter)) return false;
+                
+                return true;
+            });
+            
+            // Sort and render
+            sortData();
+            renderTable();
+        }
+        
+        // Function to change sort order
+        function changeSortOrder(field) {
+            // If same field, toggle direction
+            if (field === sortField) {
+                sortDirection = sortDirection === 'ascending' ? 'descending' : 'ascending';
+            } else {
+                // New field, default to ascending
+                sortField = field;
+                sortDirection = 'ascending';
+            }
+            
+            // Sort and render
+            sortData();
+            renderTable();
+        }
+        
+        // Function to sort data based on current sort field and direction
+        function sortData() {
+            filteredData.sort((a, b) => {
+                let valueA, valueB;
+                
+                // Get values based on sort field
+                if (['65', '85', '95'].includes(sortField)) {
+                    valueA = a.values[sortField];
+                    valueB = b.values[sortField];
+                } else {
+                    valueA = a[sortField];
+                    valueB = b[sortField];
+                }
+                
+                // String comparison for non-numeric fields
+                if (typeof valueA === 'string') {
+                    if (sortDirection === 'ascending') {
+                        return valueA.localeCompare(valueB);
+                    } else {
+                        return valueB.localeCompare(valueA);
+                    }
+                }
+                
+                // Numeric comparison
+                if (sortDirection === 'ascending') {
+                    return valueA - valueB;
+                } else {
+                    return valueB - valueA;
+                }
+            });
+        }
+        
+        // Helper function to convert number to Roman numeral (for tank tiers)
+        function getRomanNumeral(num) {
+            const romanNumerals = {
+                1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V',
+                6: 'VI', 7: 'VII', 8: 'VIII', 9: 'IX', 10: 'X',
+                11: 'XI'
+            };
+            return romanNumerals[num] || num.toString();
+        }
+        
+        // Function to set up daily updates at 9:00 AM
+        function setupDailyUpdate() {
+            const now = new Date();
+            let nextUpdate;
+            
+            // If it's before 9 AM, schedule for today at 9 AM
+            if (now.getHours() < 9) {
+                nextUpdate = new Date(now);
+                nextUpdate.setHours(9, 0, 0, 0);
+            } else {
+                // Otherwise, schedule for tomorrow at 9 AM
+                nextUpdate = new Date(now);
+                nextUpdate.setDate(now.getDate() + 1);
+                nextUpdate.setHours(9, 0, 0, 0);
+            }
+            
+            // Time until next update (in milliseconds)
+            const timeUntilUpdate = nextUpdate - now;
+            
+            // Schedule the update
+            setTimeout(() => {
+                fetchGunMarksData();
+                setupDailyUpdate(); // Schedule next update
+            }, timeUntilUpdate);
+            
+            console.log(`Next gun marks update scheduled for ${nextUpdate.toLocaleString()}`);
+        }
+    </script>
+</body>
+</html> 
