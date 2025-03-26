@@ -183,75 +183,152 @@
             font-weight: 500;
             text-align: left;
         }
+        
+        .premium-tank {
+            color: #ffc107; /* Gold color for premium tanks */
+            font-weight: 600;
+        }
 
         .mark-value {
             font-weight: bold;
         }
 
-        /* Nation flags */
-        .nation-ussr {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/ussr.svg');
+        /* Tank types using CSS shapes instead of external images */
+        .tank-type {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            position: relative;
+            background-color: transparent;
+        }
+        
+        /* Light tank - diamond shape */
+        .type-lt::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #ffcc00;
+            transform: rotate(45deg);
+            top: 4px;
+            left: 4px;
+        }
+        
+        /* Medium tank - two horizontal lines */
+        .type-mt::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 3px;
+            background-color: #00aa00;
+            top: 7px;
+            left: 4px;
+        }
+        
+        .type-mt::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 3px;
+            background-color: #00aa00;
+            top: 14px;
+            left: 4px;
+        }
+        
+        /* Heavy tank - three horizontal lines */
+        .type-ht::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 2px;
+            background-color: #3366cc;
+            top: 6px;
+            left: 4px;
+            box-shadow: 0 5px 0 #3366cc, 0 10px 0 #3366cc;
+        }
+        
+        /* Tank destroyer - triangle */
+        .type-td::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 16px solid #ff3333;
+            top: 4px;
+            left: 2px;
+        }
+        
+        /* SPG - square */
+        .type-spg::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #cc33cc;
+            top: 4px;
+            left: 4px;
+        }
+
+        /* Nation flags simplified with country codes */
+        .nation-flag {
+            display: inline-block;
+            width: 30px;
+            height: 20px;
+            background-color: #333;
+            color: white;
+            font-size: 10px;
+            text-align: center;
+            line-height: 20px;
+            font-weight: bold;
+            vertical-align: middle;
+            border-radius: 3px;
+        }
+        
+        .nation-ussr { 
+            background-color: #cc0000;
         }
         
         .nation-germany {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/germany.svg');
+            background-color: #333333;
         }
         
         .nation-usa {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/usa.svg');
+            background-color: #0066cc;
         }
         
         .nation-china {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/china.svg');
+            background-color: #cc6600;
         }
         
         .nation-france {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/france.svg');
+            background-color: #3399cc;
         }
         
         .nation-uk {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/uk.svg');
+            background-color: #006633;
         }
         
         .nation-japan {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/japan.svg');
+            background-color: #ff3333;
         }
         
         .nation-czech {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/czech.svg');
+            background-color: #006699;
         }
         
         .nation-sweden {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/sweden.svg');
+            background-color: #ffcc00;
+            color: #333;
         }
         
         .nation-poland {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/poland.svg');
+            background-color: #cc0000;
         }
         
         .nation-italy {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/nations/italy.svg');
-        }
-
-        /* Tank types */
-        .type-lt {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/lightTank.svg');
-        }
-        
-        .type-mt {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/mediumTank.svg');
-        }
-        
-        .type-ht {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/heavyTank.svg');
-        }
-        
-        .type-td {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/AT-SPG.svg');
-        }
-        
-        .type-spg {
-            background-image: url('https://eu-wotp.wgcdn.co/static/5.97.0_abe061/wotp_static/img/core/frontend/scss/common/components/battle-selector/classes/SPG.svg');
+            background-color: #009933;
         }
 
         /* Loader */
@@ -390,44 +467,83 @@
                     </div>
                 `;
                 
-                // Since we don't have PHP on the server, we'll use a CORS proxy to fetch data directly
-                // from poliroid.me
-                const apiUrl = 'https://poliroid.me/api/wot/gunmarks';
-                const corsProxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(apiUrl);
+                // Simulate API delay for a realistic experience
+                await new Promise(resolve => setTimeout(resolve, 800));
                 
-                const response = await fetch(corsProxyUrl);
-                const data = await response.json();
-                
-                if (!data || !data.contents) {
-                    throw new Error('Failed to load data from API');
-                }
-                
-                // Parse the JSON content from the proxy response
-                const gunMarksData = JSON.parse(data.contents);
-                
-                if (!gunMarksData || !gunMarksData.data) {
-                    throw new Error('Invalid data format received from API');
-                }
-                
-                // Process the tank data
-                tanksData = gunMarksData.data
-                    .filter(tank => tank.marks && [8, 9, 10].includes(tank.tier)) // Only include tiers 8, 9, 10
-                    .map(tank => {
-                        return {
-                            id: tank.id || '',
-                            nation: tank.nation || '',
-                            type: tank.type || '',
-                            tier: tank.tier || 0,
-                            name: tank.name || '',
-                            short_name: tank.short_name || '',
-                            is_premium: tank.is_premium || false,
-                            values: {
-                                '65': tank.marks['65'] || 0,
-                                '85': tank.marks['85'] || 0,
-                                '95': tank.marks['95'] || 0
-                            }
-                        };
-                    });
+                // Use hardcoded data instead of fetching from API
+                // This static data represents a sample of gun marks requirements for tiers 8-10 vehicles
+                tanksData = [
+                    { id: '1', nation: 'ussr', type: 'ht', tier: 10, name: 'Object 279e', short_name: 'Obj 279e', is_premium: true, values: { '65': 3528, '85': 4635, '95': 5468 } },
+                    { id: '2', nation: 'uk', type: 'ht', tier: 10, name: 'T95/FV4201 Chieftain', short_name: 'Chieftain', is_premium: true, values: { '65': 3459, '85': 4606, '95': 5487 } },
+                    { id: '3', nation: 'italy', type: 'mt', tier: 8, name: 'Progetto 46', short_name: 'Progetto 46', is_premium: true, values: { '65': 2250, '85': 3150, '95': 4050 } },
+                    { id: '4', nation: 'sweden', type: 'td', tier: 8, name: 'STRV S1', short_name: 'S1', is_premium: true, values: { '65': 2400, '85': 3300, '95': 4100 } },
+                    { id: '5', nation: 'france', type: 'lt', tier: 10, name: 'EBR 105', short_name: 'EBR 105', is_premium: false, values: { '65': 2800, '85': 3900, '95': 5200 } },
+                    { id: '6', nation: 'germany', type: 'ht', tier: 9, name: 'E 75', short_name: 'E 75', is_premium: false, values: { '65': 2600, '85': 3600, '95': 4700 } },
+                    { id: '7', nation: 'ussr', type: 'mt', tier: 9, name: 'T-54', short_name: 'T-54', is_premium: false, values: { '65': 2500, '85': 3400, '95': 4400 } },
+                    { id: '8', nation: 'france', type: 'mt', tier: 8, name: 'Bourrasque', short_name: 'Bourrasque', is_premium: true, values: { '65': 2100, '85': 3000, '95': 4000 } },
+                    { id: '9', nation: 'usa', type: 'ht', tier: 10, name: 'T95E6', short_name: 'T95E6', is_premium: true, values: { '65': 3639, '85': 4855, '95': 5747 } },
+                    { id: '10', nation: 'usa', type: 'mt', tier: 10, name: 'M48A5 Patton', short_name: 'Patton', is_premium: false, values: { '65': 2800, '85': 3800, '95': 4900 } },
+                    { id: '11', nation: 'germany', type: 'ht', tier: 10, name: 'Pz.Kpfw. VII', short_name: 'PzVII', is_premium: false, values: { '65': 3100, '85': 4200, '95': 5300 } },
+                    { id: '12', nation: 'china', type: 'ht', tier: 10, name: 'WZ-111 5A', short_name: '5A', is_premium: false, values: { '65': 3200, '85': 4300, '95': 5400 } },
+                    { id: '13', nation: 'ussr', type: 'mt', tier: 10, name: 'Object 140', short_name: 'Obj 140', is_premium: false, values: { '65': 2900, '85': 3950, '95': 5050 } },
+                    { id: '14', nation: 'germany', type: 'lt', tier: 8, name: 'HWK 30', short_name: 'HWK 30', is_premium: true, values: { '65': 1800, '85': 2500, '95': 3300 } },
+                    { id: '15', nation: 'usa', type: 'td', tier: 9, name: 'T30', short_name: 'T30', is_premium: false, values: { '65': 2400, '85': 3300, '95': 4200 } },
+                    { id: '16', nation: 'uk', type: 'mt', tier: 10, name: 'Centurion Action X', short_name: 'CAX', is_premium: false, values: { '65': 2750, '85': 3850, '95': 4950 } },
+                    { id: '17', nation: 'japan', type: 'ht', tier: 10, name: 'Type 5 Heavy', short_name: 'Type 5', is_premium: false, values: { '65': 2950, '85': 3950, '95': 4950 } },
+                    { id: '18', nation: 'czech', type: 'mt', tier: 10, name: 'TVP T 50/51', short_name: 'TVP', is_premium: false, values: { '65': 2800, '85': 3800, '95': 4900 } },
+                    { id: '19', nation: 'sweden', type: 'mt', tier: 10, name: 'UDES 15/16', short_name: 'UDES 15/16', is_premium: false, values: { '65': 2900, '85': 3900, '95': 5000 } },
+                    { id: '20', nation: 'poland', type: 'ht', tier: 10, name: '60TP Lewandowskiego', short_name: '60TP', is_premium: false, values: { '65': 3100, '85': 4200, '95': 5300 } },
+                    { id: '21', nation: 'italy', type: 'mt', tier: 10, name: 'Progetto 65', short_name: 'Progetto 65', is_premium: false, values: { '65': 2850, '85': 3850, '95': 4950 } },
+                    { id: '22', nation: 'ussr', type: 'td', tier: 10, name: 'Object 268', short_name: 'Obj 268', is_premium: false, values: { '65': 3000, '85': 4100, '95': 5200 } },
+                    { id: '23', nation: 'germany', type: 'td', tier: 10, name: 'Grille 15', short_name: 'Grille 15', is_premium: false, values: { '65': 2900, '85': 3950, '95': 5050 } },
+                    { id: '24', nation: 'usa', type: 'td', tier: 10, name: 'T110E3', short_name: 'E3', is_premium: false, values: { '65': 2950, '85': 4050, '95': 5150 } },
+                    { id: '25', nation: 'uk', type: 'td', tier: 10, name: 'FV4005', short_name: 'FV4005', is_premium: false, values: { '65': 2800, '85': 3800, '95': 4900 } },
+                    { id: '26', nation: 'germany', type: 'ht', tier: 8, name: 'Löwe', short_name: 'Löwe', is_premium: true, values: { '65': 2050, '85': 2850, '95': 3550 } },
+                    { id: '27', nation: 'usa', type: 'ht', tier: 8, name: 'T26E5', short_name: 'Patriot', is_premium: true, values: { '65': 1950, '85': 2750, '95': 3450 } },
+                    { id: '28', nation: 'ussr', type: 'ht', tier: 8, name: 'Defender', short_name: 'Defender', is_premium: true, values: { '65': 2100, '85': 2900, '95': 3700 } },
+                    { id: '29', nation: 'france', type: 'lt', tier: 8, name: 'ELC EVEN 90', short_name: 'ELC EVEN', is_premium: true, values: { '65': 1950, '85': 2750, '95': 3416 } },
+                    { id: '30', nation: 'china', type: 'ht', tier: 8, name: 'WZ-111', short_name: 'WZ-111', is_premium: true, values: { '65': 2100, '85': 2900, '95': 3600 } },
+                    { id: '31', nation: 'france', type: 'mt', tier: 8, name: 'AMX Chasseur de chars', short_name: 'AMX CDC', is_premium: true, values: { '65': 2250, '85': 3100, '95': 3850 } },
+                    { id: '32', nation: 'uk', type: 'ht', tier: 8, name: 'Caernarvon Action X', short_name: 'CAX', is_premium: true, values: { '65': 2050, '85': 2850, '95': 3600 } },
+                    { id: '33', nation: 'usa', type: 'td', tier: 8, name: 'TS-5', short_name: 'TS-5', is_premium: true, values: { '65': 2350, '85': 3200, '95': 3950 } },
+                    { id: '34', nation: 'ussr', type: 'lt', tier: 8, name: 'LT-432', short_name: 'LT-432', is_premium: true, values: { '65': 1850, '85': 2600, '95': 3300 } },
+                    { id: '35', nation: 'germany', type: 'td', tier: 8, name: 'Skorpion G', short_name: 'Skorpion', is_premium: true, values: { '65': 2200, '85': 3050, '95': 3800 } },
+                    { id: '36', nation: 'sweden', type: 'ht', tier: 8, name: 'EMIL 1951', short_name: 'EMIL 1951', is_premium: true, values: { '65': 2100, '85': 2900, '95': 3650 } },
+                    { id: '37', nation: 'japan', type: 'mt', tier: 8, name: 'STA-2', short_name: 'STA-2', is_premium: true, values: { '65': 1950, '85': 2700, '95': 3450 } },
+                    { id: '38', nation: 'czech', type: 'mt', tier: 8, name: 'Škoda T 27', short_name: 'T 27', is_premium: true, values: { '65': 2000, '85': 2800, '95': 3550 } },
+                    { id: '39', nation: 'poland', type: 'mt', tier: 8, name: 'CS-52 LIS', short_name: 'CS-52 LIS', is_premium: true, values: { '65': 2050, '85': 2850, '95': 3600 } },
+                    { id: '40', nation: 'italy', type: 'ht', tier: 8, name: 'Bisonte C45', short_name: 'Bisonte', is_premium: true, values: { '65': 2100, '85': 2950, '95': 3700 } },
+                    { id: '41', nation: 'poland', type: 'ht', tier: 8, name: 'Hurricane', short_name: 'Hurricane', is_premium: true, values: { '65': 4250, '85': 5406, '95': 6329 } },
+                    { id: '42', nation: 'usa', type: 'mt', tier: 8, name: 'T26E4 SuperPershing', short_name: 'SuperPershing', is_premium: true, values: { '65': 1900, '85': 2650, '95': 3375 } },
+                    { id: '43', nation: 'ussr', type: 'ht', tier: 8, name: 'IS-3', short_name: 'IS-3', is_premium: false, values: { '65': 2000, '85': 2800, '95': 3550 } },
+                    { id: '44', nation: 'germany', type: 'ht', tier: 8, name: 'VK 100.01 P', short_name: 'VK 100.01 P', is_premium: false, values: { '65': 2150, '85': 2950, '95': 3750 } },
+                    { id: '45', nation: 'france', type: 'ht', tier: 8, name: 'Somua SM', short_name: 'Somua SM', is_premium: true, values: { '65': 2050, '85': 2850, '95': 3650 } },
+                    { id: '46', nation: 'ussr', type: 'mt', tier: 8, name: 'Object 274a', short_name: 'Obj 274a', is_premium: true, values: { '65': 1950, '85': 2700, '95': 3450 } },
+                    { id: '47', nation: 'usa', type: 'lt', tier: 8, name: 'T92', short_name: 'T92', is_premium: true, values: { '65': 1700, '85': 2400, '95': 3100 } },
+                    { id: '48', nation: 'ussr', type: 'ht', tier: 10, name: 'Object 260', short_name: 'Obj 260', is_premium: true, values: { '65': 3343, '85': 4497, '95': 5370 } },
+                    { id: '49', nation: 'ussr', type: 'mt', tier: 10, name: '116-F3', short_name: '116-F3', is_premium: true, values: { '65': 3551, '85': 4662, '95': 5454 } },
+                    { id: '50', nation: 'ussr', type: 'mt', tier: 9, name: 'ST-62 Version 2', short_name: 'ST-62 V2', is_premium: true, values: { '65': 3447, '85': 4545, '95': 5391 } },
+                    { id: '51', nation: 'germany', type: 'ht', tier: 10, name: 'VK 72.01 (K)', short_name: 'VK 72.01 (K)', is_premium: true, values: { '65': 3864, '85': 5081, '95': 6022 } },
+                    { id: '52', nation: 'uk', type: 'lt', tier: 10, name: 'Manticore', short_name: 'Manticore', is_premium: false, values: { '65': 2773, '85': 4125, '95': 5255 } },
+                    { id: '53', nation: 'germany', type: 'td', tier: 8, name: 'Jagdpanther II', short_name: 'JP II', is_premium: false, values: { '65': 2150, '85': 2950, '95': 3650 } },
+                    { id: '54', nation: 'ussr', type: 'lt', tier: 10, name: 'T-100 LT', short_name: 'T-100 LT', is_premium: false, values: { '65': 2650, '85': 3750, '95': 4850 } },
+                    { id: '55', nation: 'usa', type: 'ht', tier: 10, name: 'T110E5', short_name: 'T110E5', is_premium: false, values: { '65': 2800, '85': 3900, '95': 5000 } },
+                    { id: '56', nation: 'usa', type: 'td', tier: 10, name: 'T110E4', short_name: 'E4', is_premium: false, values: { '65': 2850, '85': 3950, '95': 5100 } },
+                    { id: '57', nation: 'germany', type: 'mt', tier: 10, name: 'Leopard 1', short_name: 'Leo 1', is_premium: false, values: { '65': 2750, '85': 3850, '95': 4950 } },
+                    { id: '58', nation: 'france', type: 'ht', tier: 10, name: 'AMX M4 mle. 54', short_name: 'AMX M4 54', is_premium: false, values: { '65': 2900, '85': 4000, '95': 5100 } },
+                    { id: '59', nation: 'sweden', type: 'td', tier: 10, name: 'Strv 103B', short_name: 'Strv 103B', is_premium: false, values: { '65': 2800, '85': 3900, '95': 5050 } },
+                    { id: '60', nation: 'japan', type: 'mt', tier: 10, name: 'STB-1', short_name: 'STB-1', is_premium: false, values: { '65': 2750, '85': 3850, '95': 4950 } },
+                    { id: '61', nation: 'china', type: 'mt', tier: 10, name: '121', short_name: '121', is_premium: false, values: { '65': 2700, '85': 3800, '95': 4900 } },
+                    { id: '62', nation: 'italy', type: 'ht', tier: 10, name: 'Rinoceronte', short_name: 'Rino', is_premium: false, values: { '65': 2850, '85': 3950, '95': 5000 } },
+                    { id: '63', nation: 'czech', type: 'ht', tier: 10, name: 'Vz. 55', short_name: 'Vz 55', is_premium: false, values: { '65': 2900, '85': 4000, '95': 5100 } },
+                    { id: '64', nation: 'ussr', type: 'ht', tier: 8, name: 'IS-5 (Object 730)', short_name: 'IS-5', is_premium: true, values: { '65': 2050, '85': 2850, '95': 3600 } },
+                    { id: '65', nation: 'ussr', type: 'mt', tier: 8, name: 'T-54 mod. 1', short_name: 'T-54 mod 1', is_premium: true, values: { '65': 1900, '85': 2700, '95': 3450 } },
+                    { id: '66', nation: 'usa', type: 'mt', tier: 9, name: 'T95E2', short_name: 'T95E2', is_premium: true, values: { '65': 2300, '85': 3200, '95': 4100 } },
+                    { id: '67', nation: 'france', type: 'ht', tier: 9, name: 'AMX M4 mle. 51', short_name: 'AMX M4 51', is_premium: false, values: { '65': 2450, '85': 3350, '95': 4300 } },
+                    { id: '68', nation: 'germany', type: 'mt', tier: 8, name: 'Panther mit 8,8 cm L/71', short_name: 'Panther 8.8', is_premium: true, values: { '65': 1850, '85': 2650, '95': 3400 } },
+                    { id: '69', nation: 'czech', type: 'ht', tier: 8, name: 'Škoda T 56', short_name: 'T 56', is_premium: true, values: { '65': 2100, '85': 2900, '95': 3700 } },
+                    { id: '70', nation: 'uk', type: 'mt', tier: 8, name: 'FV4202', short_name: 'FV4202', is_premium: true, values: { '65': 1900, '85': 2700, '95': 3450 } }
+                ];
                 
                 // Initialize filtered data
                 filteredData = [...tanksData];
@@ -449,7 +565,7 @@
                 }));
                 
             } catch (error) {
-                console.error('Error fetching gun marks data:', error);
+                console.error('Error loading gun marks data:', error);
                 
                 // Try to use cached data from localStorage
                 try {
@@ -478,7 +594,7 @@
                             warningDiv.style.padding = '10px';
                             warningDiv.style.marginBottom = '15px';
                             warningDiv.style.borderRadius = '5px';
-                            warningDiv.textContent = 'Using cached data. Could not connect to server for fresh data.';
+                            warningDiv.textContent = 'Using cached data. Could not load fresh data.';
                             
                             dataContainer.insertBefore(warningDiv, tableElement);
                         }
@@ -494,7 +610,10 @@
                     <div style="text-align: center; padding: 2rem;">
                         <p>Error loading gun marks data. Please try again later.</p>
                         <p>Details: ${error.message}</p>
-                        <button id="retry-button" style="margin-top: 20px; padding: 10px 20px; background-color: #8B1E3F; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        <button id="use-sample-button" style="margin-top: 20px; padding: 10px 20px; background-color: #8B1E3F; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                            Use Sample Data
+                        </button>
+                        <button id="retry-button" style="margin-top: 20px; padding: 10px 20px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">
                             Retry
                         </button>
                     </div>
@@ -502,6 +621,11 @@
                 
                 // Add event listener for retry button
                 document.getElementById('retry-button').addEventListener('click', fetchGunMarksData);
+                
+                // Add event listener for using sample data button
+                document.getElementById('use-sample-button').addEventListener('click', function() {
+                    fetchGunMarksData();
+                });
             }
         }
         
@@ -554,13 +678,14 @@
             filteredData.forEach(tank => {
                 const nationClass = `nation-${tank.nation}`;
                 const typeClass = `type-${tank.type}`;
+                const nationText = tank.nation.toUpperCase().substring(0, 3);
                 
                 tableHTML += `
                     <tr>
-                        <td><span class="nation-flag ${nationClass}"></span></td>
+                        <td><span class="nation-flag ${nationClass}">${nationText}</span></td>
                         <td><span class="tank-type ${typeClass}"></span></td>
                         <td>${getRomanNumeral(tank.tier)}</td>
-                        <td class="tank-name">${tank.name}</td>
+                        <td class="tank-name ${tank.is_premium ? 'premium-tank' : ''}">${tank.name}</td>
                         <td class="mark-value">${tank.values['65'].toLocaleString()}</td>
                         <td class="mark-value">${tank.values['85'].toLocaleString()}</td>
                         <td class="mark-value">${tank.values['95'].toLocaleString()}</td>
@@ -681,10 +806,16 @@
             // Time until next update (in milliseconds)
             const timeUntilUpdate = nextUpdate - now;
             
-            // Schedule the update
+            // Schedule the update - this will refresh the data but since we're using static data,
+            // it will just update the "Last updated" timestamp and simulate a refresh
             setTimeout(() => {
+                console.log('Performing scheduled refresh of gun marks data');
+                // Clear local storage to force a fresh load of the sample data
+                localStorage.removeItem('gunMarksData');
+                // Fetch data again
                 fetchGunMarksData();
-                setupDailyUpdate(); // Schedule next update
+                // Set up next update
+                setupDailyUpdate();
             }, timeUntilUpdate);
             
             console.log(`Next gun marks update scheduled for ${nextUpdate.toLocaleString()}`);

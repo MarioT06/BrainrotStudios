@@ -7,11 +7,11 @@ A gaming website focused on World of Tanks stats, news, and community resources.
 - **Latest News**: Automatically fetches and displays World of Tanks news
   - Auto-updates every 5 minutes to check for new content
   - Loads 15 news items at a time with "Load More" functionality
-- **Gun Marks Requirements**: Live tracker for World of Tanks marks of excellence requirements
-  - Data refreshes daily at 9 AM from poliroid.me via proxy API
-  - Client-side caching for offline/fallback functionality
-  - Filterable by nation, type, tier (8-10), and searchable by name
+- **Gun Marks Requirements**: Track World of Tanks marks of excellence requirements
+  - Static sample data for tiers 8-10 vehicles
+  - Filterable by nation, type, tier, and searchable by name
   - Shows damage requirements for 65%, 85%, and 95% marks
+  - Client-side caching for offline functionality
 - **Responsive Design**: Works on desktop and mobile devices
 - **Bulgarian Language Support**: Fully translated interface and content
 
